@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tfec2 "github.com/terraform-providers/terraform-provider-aws/aws/internal/service/ec2"
 	"github.com/terraform-providers/terraform-provider-aws/aws/internal/service/ec2/finder"
+	"github.com/terraform-providers/terraform-provider-aws/aws/internal/tfresource"
 )
 
 const (
@@ -222,16 +223,11 @@ const (
 func SecurityGroupStatus(conn *ec2.EC2, id string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		group, err := finder.SecurityGroupByID(conn, id)
-		if tfawserr.ErrCodeEquals(err, tfec2.InvalidSecurityGroupIDNotFound) ||
-			tfawserr.ErrCodeEquals(err, tfec2.InvalidGroupNotFound) {
+		if tfresource.NotFound(err) {
 			return nil, SecurityGroupStatusNotFound, nil
 		}
 		if err != nil {
 			return nil, SecurityGroupStatusUnknown, err
-		}
-
-		if group == nil {
-			return nil, SecurityGroupStatusNotFound, nil
 		}
 
 		return group, SecurityGroupStatusCreated, nil
