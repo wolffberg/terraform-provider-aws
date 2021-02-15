@@ -162,7 +162,7 @@ rules:
           - pattern-not-inside: func NotFound(err error) bool { ... }
           - pattern-not-inside: func TestEmptyResultErrorAsNotFoundError(t *testing.T) { ... }
           - pattern-not-inside: func TestTooManyResultsErrorAsNotFoundError(t *testing.T) { ... }
-      - patterns:
+        - patterns:
           - pattern: |
               $X, $Y := $ERR.(*resource.NotFoundError)
           - pattern-not-inside: func isResourceNotFoundError(err error) bool { ... }
