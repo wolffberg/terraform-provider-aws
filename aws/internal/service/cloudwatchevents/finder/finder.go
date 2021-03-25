@@ -30,6 +30,14 @@ func RuleByID(conn *events.CloudWatchEvents, ruleID string) (*events.DescribeRul
 	return Rule(conn, busName, ruleName)
 }
 
+func ConnectionByID(conn *events.CloudWatchEvents, connectionName string) (*events.DescribeConnectionOutput, error) {
+	input := events.DescribeConnectionInput{
+		Name: aws.String(connectionName),
+	}
+
+	return conn.DescribeConnection(&input)
+}
+
 func Target(conn *events.CloudWatchEvents, busName, ruleName, targetId string) (*events.Target, error) {
 	var result *events.Target
 	err := lister.ListAllTargetsForRulePages(conn, busName, ruleName, func(page *events.ListTargetsByRuleOutput, lastPage bool) bool {
